@@ -31,7 +31,6 @@ function setId() {
   return idCounter;
 }
 
-
 function getItemsFromLS(key) {
   return JSON.parse(localStorage.getItem(key)) || [];
 }
@@ -60,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //   clazz = 'done';
     // }
     const li = `<li data-id=${item.id} class="list-group-item d-flex justify-content-between">
-  <span class="${item.done == true ? 'done' : ''}">${item.name}</span>
+  <span class="${item.done == true ? 'done' : ''} ${item.important == true ? 'important' : ''}">${item.name}</span>
   <div class="btn-actions"><a class="btn-important text-dark" href=""><i class="fs-5 bi bi-exclamation-circle-fill me-1"></i></a>
   <a class="btn-delete text-dark" href=""><i class="fs-5 bi bi-x-circle-fill"></i></a>
   </div>
@@ -70,26 +69,29 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 
-
-
 document.querySelector('.list').addEventListener('click', function (e) {
-  if (e.target.matches('span')) {
-    e.target.classList.toggle('done');
+  e.preventDefault();
 
-
+  function modifyItemData(param) {
     const tasks = getItemsFromLS('tasks');
     tasks.forEach(function (item, ind) {
-      if (e.target.parentElement.dataset.id == item.id) {
-        item.done = !item.done;
+      if (e.target.closest('li').dataset.id == item.id) {
+        item[param] = !item[param];
       }
     });
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
 
+  if (e.target.matches('span')) {
+    e.target.classList.toggle('done');
+    modifyItemData('done');
+  }
+
+  if (e.target.matches('.btn-important,.btn-important>i')) {
+    e.target.closest('li').querySelector('span').classList.toggle('important');
+    modifyItemData('important');
   }
 })
-
-
-
 
 
