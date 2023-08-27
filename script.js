@@ -9,18 +9,28 @@ function clearInput(input) {
 function addItemToLS(name, source, params = null) { // {important: false, done: false}
   let items = getItemsFromLS(source);
   let newItem;
-  let id;
+  let id = setId();
   if (items.length == 0) {
-    id = 1;
     newItem = { id: id, name, ...params }; //{ id: 1, name:dfd, important: false, done: false } // { id: 1, name }
   } else {
-    id = items[items.length - 1].id + 1;
     newItem = { id, name, ...params };
   }
   items.push(newItem);
   localStorage.setItem(source, JSON.stringify(items));
   return id;
 }
+
+function getId() {
+  return localStorage.getItem('idCounter') || 0;
+}
+
+function setId() {
+  let idCounter = +getId();
+  idCounter++;
+  localStorage.setItem('idCounter', idCounter);
+  return idCounter;
+}
+
 
 function getItemsFromLS(key) {
   return JSON.parse(localStorage.getItem(key)) || [];
@@ -40,7 +50,9 @@ document.querySelector('.btn-add').addEventListener('click', function (event) {
   clearInput(input)
 });
 
+
 document.addEventListener('DOMContentLoaded', function () {
+  // idCounter = getId();
   const tasks = getItemsFromLS('tasks');
   tasks.forEach(function (item, ind) {
     // let clazz = '';
