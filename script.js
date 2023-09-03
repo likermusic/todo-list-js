@@ -20,6 +20,16 @@ function addItemToLS(name, source, params = null) { // {important: false, done: 
   return id;
 }
 
+function removeItemFromLS(id, source) {
+  //1.id Item
+  console.log(id);
+  //2.Get Data from LS
+  getItemsFromLS(source)
+  //3.Match id 
+  //4.Delete Item From Ls
+  //5. Push Data to LS
+}
+
 function getId() {
   return localStorage.getItem('idCounter') || 0;
 }
@@ -91,6 +101,12 @@ document.querySelector('.list').addEventListener('click', function (e) {
   if (e.target.matches('.btn-important,.btn-important>i')) {
     e.target.closest('li').querySelector('span').classList.toggle('important');
     modifyItemData('important');
+  }
+
+  if (e.target.matches('.btn-delete,.btn-delete>i')) {
+    const id = e.target.closest('li').dataset.id;
+    removeItemFromLS(id, 'tasks');
+    e.target.closest('li').remove();
   }
 })
 
